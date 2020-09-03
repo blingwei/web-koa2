@@ -12,7 +12,7 @@ const logger = require('koa-logger');
 const session = require('koa-session');
 const bodyParser = require('koa-bodyparser');
 const csrf= require('koa-csrf');
-const cors = require('koa-cors');
+const cors = require('koa2-cors');
 const statics = require('koa-static');
 const Router =require('koa-router');
 const io = require('socket.io');
@@ -28,22 +28,8 @@ const router = new Router();
 
 // init koa-session
 app.keys = ["it is a secret"];
-const sessionConfig = {
-    key: 'koa.sess', /** (string) cookie key (default is koa.sess) */
-    /** (number || 'session') maxAge in ms (default is 1 days) */
-    /** 'session' will result in a cookie that expires when session/browser is closed */
-    /** Warning: If a session cookie is stolen, this cookie will never expire */
-    maxAge: 86400000,
-    autoCommit: true, /** (boolean) automatically commit headers (default true) */
-    overwrite: true, /** (boolean) can overwrite or not (default true) */
-    httpOnly: true, /** (boolean) httpOnly or not (default true) */
-    signed: true, /** (boolean) signed or not (default true) */
-    rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
-    renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
-    secure: false, /** (boolean) secure cookie*/
-    sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */
-};
-app.use(session(sessionConfig, app));
+
+app.use(session(config.session, app));
 
 // init cors 设置跨域
 app.use(cors({
@@ -67,12 +53,12 @@ app.use(logger());
 app.use(bodyParser({
     enableTypes:['json', 'form', 'text']
 }))
-app.use(new csrf({
-    invalidTokenMessage: 'Invalid CSRF token',
-    invalidTokenStatusCode: 403,
-    excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
-    disableQuery: false
-}));
+// app.use(new csrf({
+//     invalidTokenMessage: 'Invalid CSRF token',
+//     invalidTokenStatusCode: 403,
+//     excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
+//     disableQuery: true
+// }));
 
 
 //init fs.dc and inject it into app(app.fs.dc) and runtime ctx(app.fs.dc)
@@ -106,7 +92,7 @@ function errorHandler() {
             ctx.fs.logger.error(err)
             //simple process.
             ctx.status = 500;
-            ctx.body = 'internal server error';
+            ctx.body = err.message;
         }
     };
 }
@@ -114,7 +100,7 @@ function errorHandler() {
 let port = config.port || 4000
 
 app.server = server.listen(port, () => {
-    console.log(`server is start at local:${port}`);
+    console.log(`server is start at  http://localhost:${port}`);
 });
 
 app.router = router;

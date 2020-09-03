@@ -69,6 +69,22 @@ const product = {
         maxsize: 1024 * 1024 * 5,
     },
 
+    session: { //koa-session 相关配置
+        key: 'sessionId', /** (string) cookie key (default is koa.sess) */
+        /** (number || 'session') maxAge in ms (default is 1 days) */
+        /** 'session' will result in a cookie that expires when session/browser is closed */
+        /** Warning: If a session cookie is stolen, this cookie will never expire */
+        maxAge: 86400000,
+        autoCommit: true, /** (boolean) automatically commit headers (default true) */
+        overwrite: true, /** (boolean) can overwrite or not (default true) */
+        httpOnly: false, /** (boolean) httpOnly or not (default true) */
+        signed: true, /** (boolean) signed or not (default true) */
+        rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
+        renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
+        secure: false, /** (boolean) secure cookie*/
+        sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */
+    }
+
     // https: { // https相关配置  （也可通过nginx服务器解决）
     //     key: fs.readFileSync('./httpskey/4426021_afterwade.top.key'),
     //     cert: fs.readFileSync('./httpskey/4426021_afterwade.top.pem'),
@@ -77,12 +93,7 @@ const product = {
 };
 
 //开发配置
-const development = {
-    port: product.port,
-    mws: product.mws,
-    dc: product.dc,
-    logger: product.logger
-};
+const development = product;
 
 if (dev) { //开发个性配置
     // logger

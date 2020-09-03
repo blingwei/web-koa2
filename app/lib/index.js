@@ -5,38 +5,44 @@
 
 const routes = require('./routes');
 const requireDirectory = require('require-directory')
+const MiddlewareBean = require('./bean/middlewareBean');
 
 module.exports.entry = function (app, router, opts) {
 
     app.fs.api = app.fs.api || {};
-
     // init middleware
-    const directory = `${process.cwd()}\\app\\lib\\middlewares`;
+    const directory = './middlewares';
+    let middlewares = []
     requireDirectory(module, directory, {
-        visit: whenLoadModule
+        visit: (obj) => {
+            let middleware = obj(app, opts)
+            if (middleware instanceof MiddlewareBean) {
+                middlewares.push(middleware)
+            }
+        }
+    })
+    app.fs.logger.info('init middleware.');
+    middlewares.sort((a, b) => a.index - b.index).forEach(obj => {
+        app.use(obj.fn)
     })
 
-    function whenLoadModule(obj) {
-        app.use(obj(app, opts))
-    }
-
+    app.fs.logger.info('init router .');
     // init router
     router = routes(app, router, opts); //加载路由
 
-    app.fs.logger.info('init router and middleware.');
+
 
 };
 
 module.exports.models = function (dc) { // dc = { orm: Sequelize对象, ORM: Sequelize, models: {} }
     // require('./models/test')(dc);
     //存放模型的目录
-    const directory = `${process.cwd()}\\app\\lib\\models`;
+    const directory = './models';
     requireDirectory(module, directory, {
-        visit: whenLoadModule
+        visit: (obj) =>{
+            obj(dc)
+        }
     })
 
-    function whenLoadModule(obj) {
-        obj(dc)
-    }
 };
 

@@ -1,3 +1,4 @@
+const MiddlewareBean = require('../bean/middlewareBean');
 
 function factory(app, opts){
     async function  info(ctx, next) {
@@ -7,7 +8,7 @@ function factory(app, opts){
         let endTime = new Date();
         ctx.fs.logger.info("总共花费了" + (endTime-startTime)+ "ms");
     }
-    return info
+    return new MiddlewareBean(info, 1);
 }
 
 module.exports = factory

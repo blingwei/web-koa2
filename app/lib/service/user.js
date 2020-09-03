@@ -14,10 +14,19 @@ module.exports = function (models) {
         })
     }
 
-    services.getUseById = (id) => {
+    services.getUserById = (id) => {
         return  User.findOne({
             where: {
                 id: id
+            }
+        })
+    }
+
+    services.getUser = (username, password) =>{
+        return User.findOne({
+            where: {
+                username: username,
+                password: password
             }
         })
     }

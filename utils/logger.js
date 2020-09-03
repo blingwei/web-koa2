@@ -44,7 +44,7 @@ module.exports = function (app, config) {
 
     app.fs = app.fs || {};
     app.fs.logger = logger;
-    logger.log('debug', "[FS-LOGGER]", "Init.");
+    logger.info('init logger');
     return async function (ctx, next) {
         ctx.fs = ctx.fs || {};
         ctx.fs.logger = logger;
