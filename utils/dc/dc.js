@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-
+const QueryDao = require('./queryDao')
+const fs = require('fs')
 
 module.exports = function (app, config) {
     //load orm when start.
@@ -19,9 +20,13 @@ module.exports = function (app, config) {
         });
     }
     app.fs.logger.info('init dc')
+
     return async function (ctx, next) {
         //wrap orm and ORM
         ctx.fs = ctx.fs || {};
+        const queryDao = new QueryDao(orm, config.mapper);
+        await queryDao.init()
+        dc.queryDao = queryDao.get();
         ctx.fs.dc = dc;
         await next();
     };

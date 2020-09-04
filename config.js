@@ -30,7 +30,7 @@ const product = {
     port: flags.port || 4000,
     mws: [ // 个性化配置
         {
-            entry: require('./app').entry, // 初始化router和中间件
+            entry: require('./app').entry, // 初始化中间件
             opts: {}
         },
 
@@ -41,6 +41,7 @@ const product = {
         //         secret:  '45901f657d3c7d9390cb8d366e0aa0fa',
         //     }
         // },
+
 
     ],
 
@@ -59,6 +60,7 @@ const product = {
             timezone: '+08:00',
             logging: false
         },
+        mapper: fs.readFileSync('./mapper.xml'),
         models: [require('./app').models] // 初始化所有的模型
     },
 

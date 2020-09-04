@@ -25,10 +25,11 @@ module.exports = function (dc) {
     res.findUserById = async (ctx, next) => {
         ctx.fs.logger.info("获取参数")
         let id = ctx.query.id
-        ctx.body = await userService.getUserById(id);
+        ctx.body = await dc.queryDao.findUserById.query({
+            id : id
+        });
 
     }
-
 
     return res;
 }

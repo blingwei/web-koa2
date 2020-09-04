@@ -1,0 +1,13 @@
+<?xml version="1.0"encoding="UTF-8"?>
+<mapper>
+
+    <select id="findUserById">
+        SELECT * from login_user where id = :id
+    </select>
+
+    <select id="findUserByUsername">
+        SELECT * from login_user where username = :username
+    </select>
+
+
+</mapper>
