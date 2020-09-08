@@ -21,7 +21,7 @@ const io = require('socket.io');
 //from fs
 const fsDc = require('./utils/dc/dc');
 const fsLogger = require('./utils/logger');
-
+const errorBean = require('./app/lib/bean/ErrorBean')
 
 const app = new Koa();
 const router = new Router();
@@ -89,10 +89,14 @@ function errorHandler() {
         try {
             await next();
         } catch (err) {
+            if(err instanceof errorBean){
+                ctx.body = ctx.fs.resultFactory.buildFailResult(err.status, err.msg);
+            }else{
+                ctx.body = ctx.fs.resultFactory.buildFailResult(900, '系统错误');
+            }
             ctx.fs.logger.error(err)
             //simple process.
-            ctx.status = 500;
-            ctx.body = err.message;
+
         }
     };
 }

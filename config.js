@@ -30,6 +30,15 @@ const product = {
     port: flags.port || 4000,
     mws: [ // 个性化配置
         {
+            entry: require('./utils/ErrorFactory').entry, // 初始化errorFactory
+            opts: {}
+        },
+        {
+            entry: require('./utils/ResultFactory').entry, // 初始化errorFactory
+            opts: {}
+        },
+
+        {
             entry: require('./app').entry, // 初始化中间件
             opts: {}
         },

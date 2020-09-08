@@ -2,11 +2,10 @@
 const request = require("superagent");
 module.exports = function (dc) {
     const userService = require('../../service/user')(dc.models)
-
     let res = {};
     res.login = async (ctx, next) => {
         ctx.fs.logger.info("获取参数")
-        let data = ctx.request.body;
+        let data = ctx.v;
         ctx.fs.logger.info("查看是否有用户信息")
         let user = await userService.getUser(data.username, data.password);
         if(user) {
